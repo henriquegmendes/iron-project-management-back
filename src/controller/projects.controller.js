@@ -7,7 +7,7 @@ class ProjectsController {
 
   getMany = async (req, res, next) => {
     try {
-      const projects = await this.Projects.find();
+      const projects = await this.Projects.find({ user: req.user.id });
 
       res.status(200).json(projects);
     } catch (error) {
@@ -34,7 +34,7 @@ class ProjectsController {
 
   createOne = async (req, res, next) => {
     try {
-      const newProject = new this.Projects(req.body);
+      const newProject = new this.Projects({ ...req.body, user: req.user.id });
 
       await newProject.save();
 
