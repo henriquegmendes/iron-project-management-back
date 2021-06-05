@@ -1,8 +1,10 @@
 const Projects = require('../models/Projects');
+const Tasks = require('../models/Tasks');
 
 class ProjectsController {
   constructor() {
     this.Projects = Projects;
+    this.Tasks = Tasks;
   }
 
   getMany = async (req, res, next) => {
@@ -26,7 +28,11 @@ class ProjectsController {
         return;
       }
 
-      res.status(200).json(project);
+      const tasks = await this.Tasks.find({ project: project._id }); // retorna um array de tasks
+
+      const projectWithTasks = { ...project._doc, tasks };
+
+      res.status(200).json(projectWithTasks);
     } catch (error) {
       console.log(error);
     }
